@@ -1,0 +1,7 @@
+image: redis
+expose-ports: [6379]
+env:
+  REDIS_PORT: CONTAINER_PORT:6379
+  REDIS_HOST: CONTAINER_HOST
+wait:
+  listening-ports: true

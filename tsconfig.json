@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "./src",
+    "outDir": "./dist",
     "declaration": false,
     "sourceMap": false,
     "target": "es2019",
@@ -10,7 +10,8 @@
     "strict": true,
     "skipLibCheck": true,
     "paths": {
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "@fp": ["src/fp"]
     }
   }
 }
