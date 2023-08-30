@@ -1,12 +1,17 @@
 import * as tc from 'testcontainers'
+import * as ora from 'ora'
 import { FixtureProtocol } from './type'
 import type { ImageConfiguration } from '../../configuration/type'
+
+let spinner: ReturnType<typeof ora> | undefined = undefined
 
 export const ImageProtocol: FixtureProtocol<
   ImageConfiguration,
   tc.StartedTestContainer
 > = {
   start(configuration) {
+    spinner = ora('Loading unicorns').start()
+
     let container = new tc.GenericContainer(configuration.image)
     container = container.withExposedPorts(...configuration['expose-ports'])
 
@@ -23,11 +28,13 @@ export const ImageProtocol: FixtureProtocol<
 
   async tap(container) {
     // do something
-    console.log('something something', container)
+    spinner!.color = 'yellow'
+    spinner!.text = 'loading rainbows'
     return container
   },
 
   async stop(container) {
+    spinner!.stop()
     await container.stop()
   }
 }
