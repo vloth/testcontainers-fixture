@@ -22,7 +22,7 @@ export const ImageConfiguration = t.readonly(
 )
 
 export const DockerComposeConfiguration = t.readonly(
-  t.partial({
+  t.type({
     ['docker-compose-file']: t.string,
     ['env']: t.record(t.string, t.string)
   })

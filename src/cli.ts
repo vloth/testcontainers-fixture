@@ -1,13 +1,13 @@
 import { TE, pipe } from './fp'
 import { load } from './configuration/load'
-import { init } from './fixture'
+import { pipeline } from './fixture/pipeline'
+import { ImageProtocol } from './fixture/protocol/image'
 
-// TE.match(console.log, console.error)
 async function main() {
   const run = pipe(
     'samples/sample.yml',
     load,
-    TE.chain((configuration) => init(configuration)),
+    TE.chain((configuration) => pipeline(ImageProtocol, configuration)),
     TE.match(console.log, console.error)
   )
 
