@@ -10,3 +10,6 @@ export const codes = {
 
 export const format = (code: keyof typeof codes, ...values: any[]) =>
   util.format(codes[code], ...values) as string
+
+export const errorFn = (code: keyof typeof codes) => (err: Error) =>
+  format(code, err.message)

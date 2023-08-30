@@ -1,42 +1,57 @@
-import * as fs from 'fs/promises'
 import * as YAML from 'yaml'
-import { reporter, TE, E, pipe, flow } from '../fp'
+import * as fpfs from '../utils/fs'
+import { reporter, t, TE, E, pipe, flow } from '../fp'
 import * as Error from '../errors'
-import { Configuration } from './type'
+import {
+  Configuration,
+  ImageConfiguration,
+  DockerComposeConfiguration
+} from './type'
 
-const assert = (path: string) =>
-  pipe(
-    TE.of(path),
-    TE.tap(() => TE.of(fs.access(path, fs.constants.F_OK))),
+const tryParse = (content: string) =>
+  E.tryCatch(() => YAML.parse(content), E.toError)
+
+const tryDecode = (configuration: Configuration) =>
+  ('image' in configuration
+    ? ImageConfiguration.decode(configuration)
+    : DockerComposeConfiguration.decode(
+        configuration
+      )) as t.Validation<Configuration>
+
+export const load = (path: string) => {
+  const existsTe = flow(
+    fpfs.exists,
     TE.mapLeft(() => Error.codes['config.miss'])
   )
 
-const slurp = (path: string) =>
-  TE.tryCatch(
-    () => fs.readFile(path, { encoding: 'utf8' }),
-    (err) => Error.format('config.read', String(err))
+  const slurpTe = pipe(
+    fpfs.slurp(path),
+    TE.mapLeft(Error.errorFn('config.read'))
   )
 
-const parse = (content: string) =>
-  E.tryCatch(
-    () => YAML.parse(content),
-    (err) => Error.format('config.parse', (err as YAML.YAMLParseError).message)
+  const parseTe = flow(
+    tryParse,
+    E.mapLeft(Error.errorFn('config.parse')),
+    TE.fromEither
   )
 
-const decode = flow(
-  Configuration.decode,
-  TE.fromEither,
-  TE.mapLeft((err) =>
-    Error.format(
-      'config.format',
-      reporter.formatValidationErrors(err).join('\n')
+  const decodeTe = flow(
+    tryDecode,
+    TE.fromEither,
+    TE.mapLeft((err) =>
+      Error.format(
+        'config.format',
+        reporter.formatValidationErrors(err).join('\n')
+      )
     )
   )
-)
 
-export const load = flow(
-  assert,
-  TE.chain(slurp),
-  TE.chain(flow(parse, TE.fromEither)),
-  TE.chain(decode)
-)
+  return pipe(
+    path,
+    TE.of,
+    TE.chain(existsTe),
+    TE.chain(() => slurpTe),
+    TE.chain(parseTe),
+    TE.chain(decodeTe)
+  )
+}
