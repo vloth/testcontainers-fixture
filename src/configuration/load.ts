@@ -1,15 +1,15 @@
 import * as YAML from 'yaml'
 import { fs, fn } from '@/util'
 import { TE, E, t, flow } from '@/common'
-import { toError, toDecodeError } from '../errors'
+import { toTaggedError } from '../errors'
 import * as type from './type'
 
-const access = TE.tryCatchK(fn.tapP(fs.access), toError('config.miss'))
+const access = TE.tryCatchK(fn.tossP(fs.access), toTaggedError('config.miss'))
 
-const slurp = TE.tryCatchK(fs.slurp, toError('config.read'))
+const slurp = TE.tryCatchK(fs.slurp, toTaggedError('config.read'))
 
 const yamlTojson = flow(
-  E.tryCatchK((x: any) => YAML.parse(x), toError('config.parse')),
+  E.tryCatchK((x: any) => YAML.parse(x), toTaggedError('config.parse')),
   TE.fromEither
 )
 
@@ -18,7 +18,7 @@ const decode = flow(
     type.isImage(configuration)
       ? type.ImageConfiguration.decode(configuration)
       : type.DockerComposeConfiguration.decode(configuration),
-  E.mapLeft(toDecodeError('config.format')),
+  E.mapLeft(toTaggedError('config.format')),
   TE.fromEither
 )
 

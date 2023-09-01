@@ -1,24 +1,15 @@
 import { TE, pipe } from '@/common'
 import { FixtureProtocol } from './protocol/type'
-import * as Errors from '../errors'
+import { toTaggedError } from '../errors'
 
 const start = <C, T>(p: FixtureProtocol<C, T>, c: C) =>
-  TE.tryCatch(
-    () => p.start(c),
-    (err) => Errors.format('image.container.run', c, String(err))
-  )
+  TE.tryCatch(() => p.start(c), toTaggedError('protocol.start'))
 
 const tap = <C, T>(p: FixtureProtocol<C, T>, t: T) =>
-  TE.tryCatch(
-    () => p.tap(t),
-    (err) => Errors.format('image.container.run', String(err))
-  )
+  TE.tryCatch(() => p.tap(t), toTaggedError('protocol.tap'))
 
 const stop = <C, T>(p: FixtureProtocol<C, T>, t: T) =>
-  TE.tryCatch(
-    () => p.stop(t),
-    (err) => Errors.format('image.container.run', String(err))
-  )
+  TE.tryCatch(() => p.stop(t), toTaggedError('protocol.stop'))
 
 export const pipeline = <C, T>(
   protocol: FixtureProtocol<C, T>,
