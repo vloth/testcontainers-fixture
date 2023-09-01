@@ -16,7 +16,7 @@ interface DefaultCase {
   readonly [DEFAULT]: () => unknown
 }
 
-export const matchW: <_Tag extends string>(
+export const match: <_Tag extends string>(
   _tag: _Tag
 ) => {
   <
