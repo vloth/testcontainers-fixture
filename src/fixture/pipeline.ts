@@ -1,4 +1,4 @@
-import { TE, pipe } from '../fp'
+import { TE, pipe } from '@/common'
 import { FixtureProtocol } from './protocol/type'
 import * as Errors from '../errors'
 

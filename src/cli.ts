@@ -1,4 +1,4 @@
-import { TE, pipe } from './fp'
+import { TE, pipe } from '@/common'
 import { load } from './configuration/load'
 import { isImage } from './configuration/type'
 import { pipeline } from './fixture/pipeline'

@@ -1,0 +1,24 @@
+{
+  "jsc": {
+    "target": "es2016",
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "decorators": false,
+      "dynamicImport": false
+    },
+    "keepClassNames": true,
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": true
+    },
+    "paths": {
+        "@/common": ["common"]
+    }
+    "baseUrl": "src"
+  },
+  "module": {
+    "type": "commonjs"
+  }
+}
+

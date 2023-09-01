@@ -1,15 +1,12 @@
 import * as YAML from 'yaml'
-import * as fpfs from '../utils/fs'
-import { TE, E, flow } from '../fp'
+import { fs, fn } from '../util'
+import { TE, E, flow } from '@/common'
 import { toError, toDecodeError } from '../errors'
 import * as type from './type'
 
-const access = TE.tryCatchK(
-  (path: string) => fpfs.access(path).then(() => path),
-  toError('config.miss')
-)
+const access = TE.tryCatchK(fn.tapP(fs.access), toError('config.miss'))
 
-const slurp = TE.tryCatchK(fpfs.slurp, toError('config.read'))
+const slurp = TE.tryCatchK(fs.slurp, toError('config.read'))
 
 const yamlTojson = flow(
   E.tryCatchK((x: any) => YAML.parse(x), toError('config.parse')),

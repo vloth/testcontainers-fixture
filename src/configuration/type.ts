@@ -1,4 +1,4 @@
-import { t } from '../fp'
+import { t } from '@/common'
 
 const WaitForListening = t.readonly(
   t.exact(
@@ -19,7 +19,6 @@ const WaitForTimeout = t.readonly(
 export const ImageConfiguration = t.readonly(
   t.exact(
     t.type({
-      ['abc']: t.number,
       ['image']: t.string,
       ['expose-ports']: t.array(t.number),
       ['env']: t.record(t.string, t.string),

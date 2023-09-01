@@ -1,5 +1,5 @@
 import * as tc from 'testcontainers'
-import * as ora from 'ora'
+import ora from 'ora'
 import { FixtureProtocol } from './type'
 import type { ImageConfiguration } from '../../configuration/type'
 

@@ -1,4 +1,4 @@
-import { t, reporter } from './fp'
+import { t, reporter } from '@/common'
 import * as util from 'util'
 
 export const codes = {
