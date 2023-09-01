@@ -1,6 +1,6 @@
 import * as YAML from 'yaml'
-import { fs, fn } from '../util'
-import { TE, E, flow } from '@/common'
+import { fs, fn } from '@/util'
+import { TE, E, t, flow } from '@/common'
 import { toError, toDecodeError } from '../errors'
 import * as type from './type'
 
@@ -13,15 +13,11 @@ const yamlTojson = flow(
   TE.fromEither
 )
 
-const tryDecode: typeof type.Configuration.decode = (
-  configuration: type.Configuration
-) =>
-  type.isImage(configuration)
-    ? type.ImageConfiguration.decode(configuration)
-    : type.DockerComposeConfiguration.decode(configuration)
-
 const decode = flow(
-  tryDecode,
+  (configuration: type.Configuration): t.Validation<type.Configuration> =>
+    type.isImage(configuration)
+      ? type.ImageConfiguration.decode(configuration)
+      : type.DockerComposeConfiguration.decode(configuration),
   E.mapLeft(toDecodeError('config.format')),
   TE.fromEither
 )

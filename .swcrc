@@ -1,24 +1,25 @@
 {
-  "jsc": {
-    "target": "es2016",
-    "parser": {
-      "syntax": "typescript",
-      "tsx": false,
-      "decorators": false,
-      "dynamicImport": false
+    "jsc": {
+        "target": "es2017",
+        "parser": {
+            "syntax": "typescript",
+            "tsx": false,
+            "decorators": false,
+            "dynamicImport": false
+        },
+        "keepClassNames": true,
+        "transform": {
+            "legacyDecorator": true,
+            "decoratorMetadata": true
+        },
+        "baseUrl": ".",
+        "paths": {
+          "@/src/*": ["./*"],
+          "@/util": ["util/index"],
+          "@/common": ["common"]
+        }
     },
-    "keepClassNames": true,
-    "transform": {
-      "legacyDecorator": true,
-      "decoratorMetadata": true
-    },
-    "paths": {
-        "@/common": ["common"]
+    "module": {
+        "type": "commonjs"
     }
-    "baseUrl": "src"
-  },
-  "module": {
-    "type": "commonjs"
-  }
 }
-

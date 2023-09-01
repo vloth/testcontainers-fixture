@@ -9,6 +9,7 @@ async function main() {
   const run = pipe(
     'samples/sample.yml',
     load,
+    // bind config, and pipeline to apply it later on?
     TE.chain((configuration) =>
       isImage(configuration)
         ? pipeline(ImageProtocol, configuration)
