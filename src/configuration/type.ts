@@ -19,6 +19,7 @@ const WaitForTimeout = t.readonly(
 export const ImageConfiguration = t.readonly(
   t.exact(
     t.type({
+      ['abc']: t.number,
       ['image']: t.string,
       ['expose-ports']: t.array(t.number),
       ['env']: t.record(t.string, t.string),
@@ -27,8 +28,6 @@ export const ImageConfiguration = t.readonly(
   )
 )
 export type ImageConfiguration = t.TypeOf<typeof ImageConfiguration>
-
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 export const DockerComposeConfiguration = t.readonly(
   t.exact(
@@ -42,10 +41,11 @@ export type DockerComposeConfiguration = t.TypeOf<
   typeof DockerComposeConfiguration
 >
 
-// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
 export const Configuration = t.union([
   ImageConfiguration,
   DockerComposeConfiguration
 ])
 export type Configuration = t.TypeOf<typeof Configuration>
+
+export const isImage = (configuration: Configuration) =>
+  'image' in configuration

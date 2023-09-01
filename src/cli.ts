@@ -1,13 +1,19 @@
 import { TE, pipe } from './fp'
 import { load } from './configuration/load'
+import { isImage } from './configuration/type'
 import { pipeline } from './fixture/pipeline'
 import { ImageProtocol } from './fixture/protocol/image'
+import { DockerComposeProtocol } from './fixture/protocol/docker-compose'
 
 async function main() {
   const run = pipe(
     'samples/sample.yml',
     load,
-    TE.chain((configuration) => pipeline(ImageProtocol, configuration)),
+    TE.chain((configuration) =>
+      isImage(configuration)
+        ? pipeline(ImageProtocol, configuration)
+        : pipeline(DockerComposeProtocol, configuration)
+    ),
     TE.match(console.log, console.error)
   )
 

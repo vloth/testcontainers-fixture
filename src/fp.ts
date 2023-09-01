@@ -1,6 +1,6 @@
 export * as E from 'fp-ts/Either'
 export { flow, pipe } from 'fp-ts/function'
-export * as IO from 'fp-ts/IO'
+export * as T from 'fp-ts/Task'
 export * as TE from 'fp-ts/TaskEither'
 export * as t from 'io-ts'
 export * as reporter from 'io-ts-reporters'

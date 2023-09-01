@@ -1,3 +1,4 @@
+import { t, reporter } from './fp'
 import * as util from 'util'
 
 export const codes = {
@@ -11,5 +12,8 @@ export const codes = {
 export const format = (code: keyof typeof codes, ...values: any[]) =>
   util.format(codes[code], ...values) as string
 
-export const errorFn = (code: keyof typeof codes) => (err: Error) =>
-  format(code, err.message)
+export const toError = (code: keyof typeof codes) => (error: unknown) =>
+  format(code, error instanceof Error ? error.message : String(error))
+
+export const toDecodeError = (code: keyof typeof codes) => (error: unknown) =>
+  format(code, reporter.formatValidationErrors(error as t.Errors).join('\n'))
