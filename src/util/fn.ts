@@ -1,8 +1,3 @@
-export const tossP =
-  <A, B>(f: (a: A) => Promise<B>) =>
-  (a: A) =>
-    f(a).then(() => a)
-
 const DEFAULT = '_'
 type MatchW<A, _Tag extends string, X, R> = (
   p: Extract<A, { [_tag in _Tag]: X }>

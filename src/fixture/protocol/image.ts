@@ -5,6 +5,8 @@ import type { ImageConfiguration } from '../../configuration/type'
 
 let spinner: ReturnType<typeof ora> | undefined = undefined
 
+const delay = (ts: number) => new Promise((resolve) => setTimeout(resolve, ts))
+
 export const ImageProtocol: FixtureProtocol<
   ImageConfiguration,
   tc.StartedTestContainer
@@ -30,11 +32,14 @@ export const ImageProtocol: FixtureProtocol<
     // do something
     spinner!.color = 'yellow'
     spinner!.text = 'loading rainbows'
+    await delay(5000)
     return container
   },
 
   async stop(container) {
+    spinner!.color = 'red'
+    spinner!.text = 'FINISHING>>>>'
     spinner!.stop()
-    await container.stop()
+    await container?.stop()
   }
 }

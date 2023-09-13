@@ -1,22 +1,32 @@
 import { TE, pipe } from '@/common'
+import { ps } from '@/util'
 import { load } from './configuration/load'
 import { isImage } from './configuration/type'
 import { pipeline } from './fixture/pipeline'
 import { ImageProtocol } from './fixture/protocol/image'
 import { DockerComposeProtocol } from './fixture/protocol/docker-compose'
-import { toString } from './errors'
+import * as Errors from './errors'
 
 async function main() {
+  const { signal, cancel } = ps.newSignal()
+
+  ;['SIGINT', 'SIGQUIT', 'SIGTERM'].forEach((sig) => process.once(sig, cancel))
+
   const run = pipe(
-    'samples/sample.yml',
-    load,
+    load('samples/sample.yml'),
     TE.chain((configuration) =>
-      isImage(configuration)
-        ? pipeline(ImageProtocol, configuration)
-        : pipeline(DockerComposeProtocol, configuration)
+      pipe(
+        signal,
+        isImage(configuration)
+          ? pipeline(ImageProtocol, configuration)
+          : pipeline(DockerComposeProtocol, configuration)
+      )
     ),
-    TE.mapLeft(toString),
-    TE.match(console.log, console.error)
+    TE.mapLeft(Errors.toString),
+    TE.match(
+      (e) => console.error('error: ', e),
+      (s) => console.log('sucess: ', s)
+    )
   )
 
   await run()

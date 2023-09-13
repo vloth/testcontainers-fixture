@@ -18,6 +18,6 @@ export const DockerComposeProtocol: FixtureProtocol<
   },
 
   async stop(composedEnv) {
-    await composedEnv.stop()
+    await composedEnv?.stop()
   }
 }
