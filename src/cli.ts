@@ -8,28 +8,28 @@ import { DockerComposeProtocol } from './fixture/protocol/docker-compose'
 import * as Errors from './errors'
 
 async function main() {
-  const { signal, cancel } = ps.newSignal()
+	const { signal, cancel } = ps.newSignal()
 
   ;['SIGINT', 'SIGQUIT', 'SIGTERM'].forEach((sig) => process.once(sig, cancel))
 
-  const run = pipe(
-    load('samples/sample.yml'),
-    TE.chain((configuration) =>
-      pipe(
-        signal,
-        isImage(configuration)
-          ? pipeline(ImageProtocol, configuration)
-          : pipeline(DockerComposeProtocol, configuration)
-      )
-    ),
-    TE.mapLeft(Errors.toString),
-    TE.match(
-      (e) => console.error('error: ', e),
-      (s) => console.log('sucess: ', s)
-    )
-  )
+	const run = pipe(
+		load('samples/sample.yml'),
+		TE.chain((configuration) =>
+			pipe(
+				signal,
+				isImage(configuration)
+					? pipeline(ImageProtocol, configuration)
+					: pipeline(DockerComposeProtocol, configuration)
+			)
+		),
+		TE.mapLeft(Errors.toString),
+		TE.match(
+			(e) => console.error('error: ', e),
+			(s) => console.log('sucess: ', s)
+		)
+	)
 
-  await run()
+	await run()
 }
 
 main()

@@ -18,47 +18,47 @@ export type OpError = (
 
 export const toError =
   (tag: OpError['_tag']) =>
-  (error: unknown): EveryError => ({
-    _tag: tag,
-    error
-  })
+  	(error: unknown): EveryError => ({
+  		_tag: tag,
+  		error
+  	})
 
 export const toDecodeError =
   (tag: DecodeError['_tag']) =>
-  (error: unknown): EveryError => ({
-    _tag: tag,
-    error: error as t.Errors
-  })
+  	(error: unknown): EveryError => ({
+  		_tag: tag,
+  		error: error as t.Errors
+  	})
 
 const isCancelled = (
-  anError: any
+	anError: unknown
 ): anError is Extract<OpError, { _tag: 'PromiseCancel' }> =>
-  '_tag' in anError && anError._tag === 'PromiseCancel'
+	anError instanceof Object && '_tag' in anError && anError._tag === 'PromiseCancel'
 
 export const toString = (error: EveryError): string =>
-  pipe(
-    error,
-    fn.match('_tag')({
-      PromiseCancel: () => 'Operation was cancelled',
+	pipe(
+		error,
+		fn.match('_tag')({
+			PromiseCancel: () => 'Operation was cancelled',
 
-      ConfigMiss: () =>
-        'Configuration ".testcontainer-fixutre.rc" file not kound',
+			ConfigMiss: () =>
+				'Configuration ".testcontainer-fixutre.rc" file not kound',
 
-      ConfigRead: ({ error }) => `Error reading configuration file:\n${error}`,
+			ConfigRead: ({ error }) => `Error reading configuration file:\n${error}`,
 
-      ConfigParse: ({ error }) => `Error parsing configuration:\n${error}`,
+			ConfigParse: ({ error }) => `Error parsing configuration:\n${error}`,
 
-      ConfigFormat: ({ error }) =>
-        `Error format: ${reporter.formatValidationErrors(error)}`,
+			ConfigFormat: ({ error }) =>
+				`Error format: ${reporter.formatValidationErrors(error)}`,
 
-      'protocol.start': ({ error }) =>
-        isCancelled(error) ? toString(error) : 'Start error',
+			'protocol.start': ({ error }) =>
+				isCancelled(error) ? toString(error) : 'Start error',
 
-      'protocol.tap': ({ error }) =>
-        isCancelled(error) ? toString(error) : 'Tap error',
+			'protocol.tap': ({ error }) =>
+				isCancelled(error) ? toString(error) : 'Tap error',
 
-      'protocol.stop': () => 'protocol stop',
+			'protocol.stop': () => 'protocol stop',
 
-      default: '<#error!>'
-    })
-  )
+			default: '<#error!>'
+		})
+	)

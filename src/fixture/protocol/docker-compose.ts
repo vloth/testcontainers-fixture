@@ -6,18 +6,18 @@ export const DockerComposeProtocol: FixtureProtocol<
   DockerComposeConfiguration,
   tc.StartedDockerComposeEnvironment
 > = {
-  start(configuration) {
-    const path = configuration['docker-compose-file']
-    const container = new tc.DockerComposeEnvironment('', path)
-    return container.up()
-  },
+	start(configuration) {
+		const path = configuration['docker-compose-file']
+		const container = new tc.DockerComposeEnvironment('', path)
+		return container.up()
+	},
 
-  async tap(_, composedEnv) {
-    console.log('something something', composedEnv)
-    return composedEnv
-  },
+	async tap(_, composedEnv) {
+		console.log('something something', composedEnv)
+		return composedEnv
+	},
 
-  async stop(composedEnv) {
-    await composedEnv?.stop()
-  }
+	async stop(composedEnv) {
+		await composedEnv?.stop()
+	}
 }

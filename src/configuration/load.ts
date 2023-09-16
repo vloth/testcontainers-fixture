@@ -9,24 +9,24 @@ const access = flow(fs.access, TE.mapLeft(toError('ConfigMiss')))
 const slurp = flow(fs.slurp, TE.mapLeft(toError('ConfigRead')))
 
 const yamlTojson = flow(
-  E.tryCatchK((x: any) => YAML.parse(x), toError('ConfigParse')),
-  TE.fromEither
+	E.tryCatchK((x: string) => YAML.parse(x), toError('ConfigParse')),
+	TE.fromEither
 )
 
 const decode = flow(
-  (configuration: type.Configuration): t.Validation<type.Configuration> =>
-    type.isImage(configuration)
-      ? type.ImageConfiguration.decode(configuration)
-      : type.DockerComposeConfiguration.decode(configuration),
-  E.mapLeft(toDecodeError('ConfigFormat')),
-  TE.fromEither
+	(configuration: type.Configuration): t.Validation<type.Configuration> =>
+		type.isImage(configuration)
+			? type.ImageConfiguration.decode(configuration)
+			: type.DockerComposeConfiguration.decode(configuration),
+	E.mapLeft(toDecodeError('ConfigFormat')),
+	TE.fromEither
 )
 
 export const load = (path: string) =>
-  pipe(
-    TE.of(path),
-    TE.chainFirst(access),
-    TE.chain(slurp),
-    TE.chain(yamlTojson),
-    TE.chain(decode)
-  )
+	pipe(
+		TE.of(path),
+		TE.chainFirst(access),
+		TE.chain(slurp),
+		TE.chain(yamlTojson),
+		TE.chain(decode)
+	)
