@@ -6,8 +6,8 @@ import { ps } from '@/util'
 const start = <C, T>(signal: ps.Signal, p: FixtureProtocol<C, T>, c: C) =>
   TE.tryCatch(() => ps.from(signal, p.start(c)), toError('protocol.start'))
 
-const tap = <C, T>(signal: ps.Signal, p: FixtureProtocol<C, T>, t: T) =>
-  TE.tryCatch(() => ps.from(signal, p.tap(t)), toError('protocol.tap'))
+const tap = <C, T>(signal: ps.Signal, p: FixtureProtocol<C, T>, c: C, t: T) =>
+  TE.tryCatch(() => ps.from(signal, p.tap(c, t)), toError('protocol.tap'))
 
 const stop = <C, T>(p: FixtureProtocol<C, T>, t?: T) =>
   TE.tryCatch(() => p.stop(t), toError('protocol.stop'))
@@ -20,7 +20,7 @@ export const pipeline =
       TE.tapError(() => stop(protocol)),
       TE.chain((t) =>
         pipe(
-          tap(signal, protocol, t),
+          tap(signal, protocol, configuration, t),
           TE.tapError(() => stop(protocol, t))
         )
       ),

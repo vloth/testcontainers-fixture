@@ -1,3 +1,5 @@
+import { toError } from '../errors'
+
 export type Signal = Promise<void>
 
 export type SignalToken = {
@@ -8,9 +10,7 @@ export type SignalToken = {
 export function newSignal(): SignalToken {
   const ret = {} as unknown as SignalToken
   ret.signal = new Promise((_, reject) => {
-    ret.cancel = () => {
-      reject(new Error('Promise was cancelled'))
-    }
+    ret.cancel = () => reject(toError('PromiseCancel')(Error('PromiseCancel')))
   })
   return ret
 }

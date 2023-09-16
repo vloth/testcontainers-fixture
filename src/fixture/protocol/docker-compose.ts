@@ -12,7 +12,7 @@ export const DockerComposeProtocol: FixtureProtocol<
     return container.up()
   },
 
-  async tap(composedEnv) {
+  async tap(_, composedEnv) {
     console.log('something something', composedEnv)
     return composedEnv
   },
