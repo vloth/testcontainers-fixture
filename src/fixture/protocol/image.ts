@@ -54,10 +54,10 @@ export const ImageProtocol: FixtureProtocol<
 	},
 
 	async tap({ env }, container) {
-		// await prs.makeRun(
-		// 	['printenv', 'REDIS_HOST'],
-		// 	Object.assign({}, replaceEnv(env, container), process.env)
-		// )
+		await prs.makeRun()(
+			['printenv', 'REDIS_HOST'],
+			Object.assign({}, replaceEnv(env, container), process.env)
+		)
 		return container
 	},
 

@@ -18,12 +18,11 @@ const decode = flow(
 	TE.fromEither
 )
 
-export const load = async (path: string) =>  {
-	return pipe(
+export const load = (path: string) => 
+	pipe(
 		TE.of(path),
 		TE.chainFirst(flow(fs.access, TE.mapLeft(toError('ConfigMiss')))),
 		TE.chain(flow(fs.slurp, TE.mapLeft(toError('ConfigRead')))),
 		TE.chain(yamlTojson),
 		TE.chain(decode)
 	)
-}
