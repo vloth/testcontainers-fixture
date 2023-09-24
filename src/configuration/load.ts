@@ -4,10 +4,6 @@ import { TE, E, t, flow, pipe } from '@/common'
 import { toError, toDecodeError } from '../errors'
 import * as type from './type'
 
-const access = flow(fs.access, TE.mapLeft(toError('ConfigMiss')))
-
-const slurp = flow(fs.slurp, TE.mapLeft(toError('ConfigRead')))
-
 const yamlTojson = flow(
 	E.tryCatchK((x: string) => YAML.parse(x), toError('ConfigParse')),
 	TE.fromEither
@@ -22,11 +18,12 @@ const decode = flow(
 	TE.fromEither
 )
 
-export const load = (path: string) =>
-	pipe(
+export const load = async (path: string) =>  {
+	return pipe(
 		TE.of(path),
-		TE.chainFirst(access),
-		TE.chain(slurp),
+		TE.chainFirst(flow(fs.access, TE.mapLeft(toError('ConfigMiss')))),
+		TE.chain(flow(fs.slurp, TE.mapLeft(toError('ConfigRead')))),
 		TE.chain(yamlTojson),
 		TE.chain(decode)
 	)
+}
