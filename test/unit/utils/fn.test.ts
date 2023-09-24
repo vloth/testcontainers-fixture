@@ -2,11 +2,10 @@ import { pipe } from '@/src/common'
 import { fn } from '@/src/util'
 import { equals } from 'test/aux'
 
-suite('utils/fn')
-
 type DOG_CAT = { type: 'Dog'; bark(): number  } | { type: 'Cat'; meow(): number }
-
 const getPet = (): DOG_CAT => ({type: 'Dog', bark: () => 1 })
+
+suite('utils/fn')
 
 test('match', () => {
 	equals(pipe(

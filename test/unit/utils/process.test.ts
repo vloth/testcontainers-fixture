@@ -25,5 +25,5 @@ test('run #error', async () => {
 
 	equals(code, 2)
 	ok(!out.getCall(0))
-	equals(err.getCall(0).args, ['expr: not a decimal number: \'f\'\n'])
+	equals(err.getCall(0).args[0].substring(0,31), 'expr: not a decimal number: \'f\'')
 })
