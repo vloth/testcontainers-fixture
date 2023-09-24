@@ -3,27 +3,7 @@ import * as tc from 'testcontainers'
 import ora from 'ora'
 import { FixtureProtocol } from './type'
 import type { ImageConfiguration } from '../../configuration/type'
-import { spawn } from 'child_process'
-
-const run = (command: string[], env: Record<string, string>) => {
-	return new Promise((resolve) => {
-		const [cmd, ...args] = command
-		const child = spawn(cmd, args, { env })
-
-		child.stdout.on('data', (chunk) => process.stdout.write(chunk))
-		child.stderr.on('data', (chunk) => process.stderr.write(chunk))
-
-		child.on('close', (code) => {
-			if (code !== 0) {
-				const err = `Child command ${command.join(
-					' '
-				)} exited with code ${code}`
-				console.error(err)
-			}
-			resolve(code)
-		})
-	})
-}
+import { prs } from '@/util'
 
 export const replaceEnv = (
 	env: Record<string, string>,
@@ -74,10 +54,10 @@ export const ImageProtocol: FixtureProtocol<
 	},
 
 	async tap({ env }, container) {
-		await run(
-			['printenv', 'REDIS_HOST'],
-			Object.assign({}, replaceEnv(env, container), process.env)
-		)
+		// await prs.makeRun(
+		// 	['printenv', 'REDIS_HOST'],
+		// 	Object.assign({}, replaceEnv(env, container), process.env)
+		// )
 		return container
 	},
 

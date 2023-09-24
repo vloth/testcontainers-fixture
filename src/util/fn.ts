@@ -20,6 +20,5 @@ export const match: <_Tag extends string>(
   >(
     k: K
   ): (match: A) => ReturnType<K[keyof K]> | DefaultCase
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 } = (_tag) => (k: any) => (match: any | DefaultCase) =>
 	k?.[match?.[_tag]] ? k[match[_tag]](match) : k[DEFAULT](match)
